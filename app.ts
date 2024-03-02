@@ -26,7 +26,7 @@ async function getArticles(url: string,email: string, token: string): Promise<Ar
 }
 
 const url = "https://yargynkin.atlassian.net";
-const email = "gramax.team@ics-it.ru"
+const email = "gramax.team@ics-it.ru";
 const token = "ATATT3xFfGF0iAGCCqE5ikIv6lBb3JDW_CUCWTEbhoMTP4TPJlUVYZ2V-76DxHLECZJ3sql2woZTXxD9DC8XN8A1wg9slBmRk9Ink_7aBAzx_ySbuZeWWDDVRGHzr_kFcjf-hXebX_3CUr2zVk2rnnSlEea21L9aaForcHq34M2HdBpoPPtanyw=87E6C781";
 
 async function fetchArticles() {
