@@ -4,7 +4,6 @@ interface Article {
   content: any;
 }
 
-const token = "ATATT3xFfGF0iAGCCqE5ikIv6lBb3JDW_CUCWTEbhoMTP4TPJlUVYZ2V-76DxHLECZJ3sql2woZTXxD9DC8XN8A1wg9slBmRk9Ink_7aBAzx_ySbuZeWWDDVRGHzr_kFcjf-hXebX_3CUr2zVk2rnnSlEea21L9aaForcHq34M2HdBpoPPtanyw=87E6C781";
 const text = `gramax.team@ics-it.ru:${token}`;
 
 fetch('https://yargynkin.atlassian.net/wiki/rest/api/content', {
