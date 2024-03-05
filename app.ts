@@ -5,7 +5,7 @@ interface Article {
 
 async function getArticles(url: string,email: string, token: string): Promise<Article[]> {
     let base64AuthString = btoa(`${email}:${token}`)
-    const response = await fetch(`${url}/wiki/rest/api/content`, {
+    const response = await fetch(`${url}/wiki/api/v2/pages?body-format=ATLAS_DOC_FORMAT`, {
         headers: {
             Authorization: `Basic ${base64AuthString}`,
             Accept: 'application/json',
@@ -19,19 +19,21 @@ async function getArticles(url: string,email: string, token: string): Promise<Ar
     const data = await response.json() as Promise<any>;
     const articles: Article[] = (await data).results.map((result: any) => ({
         title: result.title,
-        content: result._expandable,
+        content: result.body.atlas_doc_format.value,
     }));
-
+    
     return articles;
 }
 
 const url = "https://yargynkin.atlassian.net";
 const email = "gramax.team@ics-it.ru";
-const token = "ATATT3xFfGF0AFD_Sha8m-EqAnmEylhhekS3o1zxIiLCPmy7a6VQas7W49rHzlVf7GFFr7i_MPDEFBXPkKbOhIJo1cqtfoXSxyJrUOlHjnYk0meuRxwqMBZSlTLyMiYBIpuGCYR2CxjgGjcN6RwbvKMt4Tp6fI2hlthDQtu04iLxSn6oPlvtKqY=EF530604";
+const token = "";
 
 async function fetchArticles() {
     const articles: Article[] = await getArticles(url, email, token);
     console.log(articles);
 }
 
+
 fetchArticles();
+
