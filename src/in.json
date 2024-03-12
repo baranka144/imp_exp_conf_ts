@@ -1,0 +1,40 @@
+{
+	"type": "doc",
+	"content": [
+		{
+			"type": "paragraph",
+			"content": [
+				{
+					"text": "Текст",
+					"type": "text"
+				}
+			]
+		},
+		{
+			"type": "paragraph",
+			"content": [
+				{
+					"text": "Зачёркнутый текст",
+					"type": "text",
+					"marks": [
+						{
+							"type": "strike"
+						}
+					]
+				}
+			]
+		},
+		{
+			"text": "Подстрочный текст",
+			"type": "text",
+			"marks": [
+				{
+					"type": "subsup",
+					"attrs": {
+						"type": "sub"
+					}
+				}
+			]
+		}
+	]
+}
