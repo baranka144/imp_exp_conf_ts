@@ -25,14 +25,119 @@
 			]
 		},
 		{
-			"text": "Подстрочный текст",
-			"type": "text",
-			"marks": [
+			"type": "paragraph",
+			"content": [
 				{
-					"type": "subsup",
-					"attrs": {
-						"type": "sub"
-					}
+					"text": "Подстрочный текст",
+					"type": "text",
+					"marks": [
+						{
+							"type": "subsup",
+							"attrs": {
+								"type": "sub"
+							}
+						}
+					]
+				}
+			]
+		},
+		{
+			"type": "bulletList",
+			"content": [
+				{
+					"type": "listItem",
+					"content": [
+						{
+							"type": "paragraph",
+							"content": [
+								{
+									"text": "Маркированный",
+									"type": "text"
+								}
+							]
+						}
+					]
+				},
+				{
+					"type": "listItem",
+					"content": [
+						{
+							"type": "paragraph",
+							"content": [
+								{
+									"text": "Список",
+									"type": "text"
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"type": "orderedList",
+			"attrs": {
+				"order": 1
+			},
+			"content": [
+				{
+					"type": "listItem",
+					"content": [
+						{
+							"type": "paragraph",
+							"content": [
+								{
+									"text": "Нумерованный",
+									"type": "text"
+								}
+							]
+						}
+					]
+				},
+				{
+					"type": "listItem",
+					"content": [
+						{
+							"type": "paragraph",
+							"content": [
+								{
+									"text": "Список",
+									"type": "text"
+								}
+							]
+						}
+					]
+				}
+			]
+		},
+		{
+			"type": "blockquote",
+			"content": [
+				{
+					"type": "paragraph",
+					"content": [
+						{
+							"text": "Цитата умного человека",
+							"type": "text"
+						}
+					]
+				},
+				{
+					"type": "paragraph"
+				}
+			]
+		},
+		{
+			"type": "unsupported_type",
+			"content": [
+				{
+					"type": "paragraph",
+					"content": [
+						{
+							"text": "Этого быть не должно",
+							"type": "text"
+						}
+					]
 				}
 			]
 		}
