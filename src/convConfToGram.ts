@@ -2,6 +2,24 @@ import fs from "fs";
 import Path from "path";
 import testJson from "./in.json";
 
+enum SupportedTypes {
+	doc = "doc",
+	paragraph = "paragraph",
+	text = "text",
+	heading = "heading",
+	bulletList = "bulletList",
+	orderedList = "orderedList",
+	listItem = "listItem",
+	blockquote = "blockquote",
+	expand = "expand",
+	codeBlock = "codeBlock",
+	panel = "panel",
+	table = "table",
+	tableRow = "tableRow",
+	tableHeader = "tableHeader",
+	tableCell = "tableCell"
+}
+
 type JSONContent = {
 	type?: string;
 	attrs?: Record<string, any>;
@@ -24,6 +42,7 @@ function convertConfluenceTextNode(textNode: JSONContent): JSONContent {
 	if (textNode.marks) {
 		textNode.marks = textNode.marks.filter((element) => element.type == "strong" ||
 			element.type == "em" ||
+			//hash? newHref? resPath?
 			element.type == "link");
 		if (textNode.marks.length == 0) delete textNode.marks;
 	};
@@ -31,6 +50,7 @@ function convertConfluenceTextNode(textNode: JSONContent): JSONContent {
 }
 
 function convertConfluenceHeadingNode(headingNode: JSONContent): JSONContent {
+	// id ? customID?
 	return headingNode;
 }
 
@@ -106,6 +126,7 @@ function convertConfluencePanelNode(panelNode: JSONContent): JSONContent {
 
 function convertConfluenceTableNode(tableNode: JSONContent): JSONContent {
 	if (tableNode.attrs) delete tableNode.attrs;
+	if (tableNode.marks) delete tableNode.marks;
 	return tableNode;
 }
 
@@ -114,16 +135,41 @@ function convertConfluenceTableRowNode(tableRowNode: JSONContent): JSONContent {
 }
 
 function convertConfluenceTableHeaderNode(tableHeaderNode: JSONContent): JSONContent {
-	tableHeaderNode.attrs["colwidth"] = null;
+	if (!tableHeaderNode.attrs["colwidth"]) {
+		tableHeaderNode.attrs["colwidth"]  = null;
+	}
 	return tableHeaderNode;
 }
 
 function convertConfluenceTableCellNode(tableCellNode: JSONContent): JSONContent {
-	tableCellNode.attrs["colwidth"] = null;
+	if (!tableCellNode.attrs["colwidth"]) {
+		tableCellNode.attrs["colwidth"]  = null;
+	}
 	return tableCellNode;
 }
 
-function convertConfluenceNodeToGramaxNode(confluenceNode: JSONContent): JSONContent {
+function convertUnsupportedTypeNode(UnsupportedTypeNode: JSONContent): JSONContent {
+	delete UnsupportedTypeNode.content;
+	let excuseNode: JSONContent = {
+		type: "note",
+		attrs: {
+			"type": "note",
+        	"title": ""
+		},
+		content: [
+			{
+				type: "paragraph",
+				content: [{
+					type: "text",
+					text: `К сожалению мы не поддерживаем экспорт элемента ${UnsupportedTypeNode.type}`
+				}]
+			}
+		]
+	}
+	return excuseNode;
+}
+
+function convertConfluenceNodeToGramaxNode(confluenceNode: JSONContent): JSONContent | undefined {
 	// завернуть ли doc в функцию
 	if (confluenceNode.type == "doc") return confluenceNode;
 	if (confluenceNode.type == "paragraph") return convertConfluenceParagraphNode(confluenceNode);
@@ -139,8 +185,8 @@ function convertConfluenceNodeToGramaxNode(confluenceNode: JSONContent): JSONCon
 	if (confluenceNode.type == "table") return convertConfluenceTableNode((confluenceNode));
 	if (confluenceNode.type == "tableRow") return convertConfluenceTableRowNode((confluenceNode));
 	if (confluenceNode.type == "tableHeader") return convertConfluenceTableHeaderNode((confluenceNode));
-	if (confluenceNode.type == "tableCell") return convertConfluenceTableCellNode((confluenceNode));
-	return {};
+	if (confluenceNode.type == "tableCell") return convertConfluenceTableCellNode((confluenceNode));	
+	return convertUnsupportedTypeNode((confluenceNode));
 }
 
 function convertConfluenceToGramax(confluenceJSON: JSONContent): JSONContent {
@@ -152,5 +198,20 @@ function convertConfluenceToGramax(confluenceJSON: JSONContent): JSONContent {
 	}
 	return gramaxJSON;
 }
-//Поменял флаг wx на w, приходилось удалять out.json, так должно было быть или нет?
-fs.writeFileSync(Path.join(__dirname, "./out.json"), JSON.stringify(convertConfluenceToGramax(testJson), null, 4), { encoding: "utf-8", flag: "w" });
+
+const unsupportedTypes: Set<string> = new Set();
+
+function checkSingleArticle(confluenceJSON: JSONContent, unsupportedTypes: Set<string>) {
+    if (SupportedTypes[confluenceJSON.type] === undefined) {
+        unsupportedTypes.add(confluenceJSON.type);
+    }
+    if (confluenceJSON.content) {
+        confluenceJSON.content.forEach((content: JSONContent) => {
+            checkSingleArticle(content, unsupportedTypes);
+        });
+    }
+
+    return unsupportedTypes;
+}
+
+//fs.writeFileSync(Path.join(__dirname, "./out.json"), JSON.stringify(convertConfluenceToGramax(testJson), null, 4), { encoding: "utf-8", flag: "w" });

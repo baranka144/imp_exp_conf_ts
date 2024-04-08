@@ -6,6 +6,7 @@
 	"scripts": {
 		"build": "tsc",
 		"start": "node ./dist/convConfToGram.js",
+		"json": "node ./dist/service.js",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"keywords": [],
@@ -13,5 +14,8 @@
 	"license": "ISC",
 	"devDependencies": {
 		"@types/node": "^20.11.26"
+	},
+	"dependencies": {
+		"express": "^4.19.2"
 	}
 }
